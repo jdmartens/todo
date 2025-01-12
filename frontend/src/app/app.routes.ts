@@ -7,7 +7,7 @@ export const routes: Routes = [
     { path: 'todos', component: TaskListComponent },
     { path: 'todo/new', component: TaskFormComponent },
     { path: 'todo/:id', component: TaskFormComponent },
-    { path: '', redirectTo: '/tasks', pathMatch: 'full' }
+    { path: '', redirectTo: '/todos', pathMatch: 'full' }
 ];
 
   
