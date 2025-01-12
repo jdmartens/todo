@@ -1,1 +1,27 @@
-<p>task-form works!</p>
+<form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <mat-label>Task Name</mat-label>
+      <input matInput formControlName="task_name" required>
+    </mat-form-field>
+  
+    <mat-form-field>
+      <mat-label>Due Date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="due_date" required>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  
+    <mat-form-field>
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status" required>
+        <mat-option value="pending">Pending</mat-option>
+        <mat-option value="in_progress">In Progress</mat-option>
+        <mat-option value="completed">Completed</mat-option>
+      </mat-select>
+    </mat-form-field>
+  
+    <button mat-raised-button color="primary" type="submit" [disabled]="!taskForm.valid">
+      {{ isEditMode ? 'Update' : 'Add' }} Task
+    </button>
+  </form>
+  
