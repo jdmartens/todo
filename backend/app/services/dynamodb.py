@@ -8,7 +8,7 @@ dynamodb = boto3.resource(
     aws_secret_access_key=aws_config.aws_secret_access_key,
     region_name=aws_config.region_name
 )
-table = dynamodb.Table('tasks2')
+table = dynamodb.Table('TodoTasks')
 
 def table_exists(table_name):
     try:
