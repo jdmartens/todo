@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Query
-from schemas.task import TaskCreate, TaskResponse
+from schemas.task import TaskCreate, TaskUpdate, TaskResponse
 from models.task import Task
 from services import dynamodb
 from typing import List
@@ -18,7 +18,7 @@ async def add_task(task: TaskCreate):
     return TaskResponse(**new_task.to_dict())
 
 @router.put("/tasks/{task_id}", response_model=TaskResponse)
-async def edit_task(task_id: str, task: TaskCreate):
+async def edit_task(task_id: str, task: TaskUpdate):
     try:
         updated_task = dynamodb.update_task(task_id, task)
         return TaskResponse(**updated_task)
