@@ -37,7 +37,8 @@ export class TaskFormComponent implements OnInit {
     this.taskForm = this.fb.group({
       task_name: ['', Validators.required],
       due_date: ['', Validators.required],
-      status: ['pending', Validators.required]
+      status: ['pending', Validators.required],
+      type: ['personal', Validators.required]
     });
   }
 
@@ -66,23 +67,24 @@ export class TaskFormComponent implements OnInit {
     if (this.taskForm.valid) {
       const taskData = this.taskForm.value;
       if (this.isEditMode) {
-        this.taskService.updateTask(this.taskId, taskData).subscribe(
-          () => {
-            this.router.navigate(['/tasks']);
+        const taskData = { ...this.taskForm.value, id: this.taskId };
+        this.taskService.updateTask(this.taskId, taskData).subscribe({
+          next: () => {
+            this.router.navigate(['/todos']);
           },
-          (error) => {
+          error: (error) => {
             console.error('Error updating task:', error);
           }
-        );
+        });
       } else {
-        this.taskService.addTask(taskData).subscribe(
-          () => {
-            this.router.navigate(['/tasks']);
+        this.taskService.addTask(taskData).subscribe({
+          next: () => {
+            this.router.navigate(['/todos']);
           },
-          (error) => {
+          error: (error) => {
             console.error('Error adding task:', error);
           }
-        );
+        });
       }
     }
   }
