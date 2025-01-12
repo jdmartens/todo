@@ -25,6 +25,14 @@ async def edit_task(task_id: str, task: TaskCreate):
     except Exception as e:
         raise HTTPException(status_code=404, detail="Task not found")
 
+@router.get("/task/{task_id}")
+async def get_task(task_id: str):
+    try:
+        task = dynamodb.get_task(task_id)
+        return TaskResponse(**task)
+    except Exception as e:
+        raise HTTPException(status_code=404, detail="Task not found")
+
 @router.delete("/tasks/{task_id}")
 async def delete_task(task_id: str):
     try:
