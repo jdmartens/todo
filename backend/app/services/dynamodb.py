@@ -46,6 +46,10 @@ def get_all_tasks(status: str = "pending"):
     response = table.scan(FilterExpression=filter_expression)
     return response['Items']
 
+def get_task(id: str):
+    response = table.get_item(Key={'id': id})
+    return response['Item']
+
 def add_task(task):
     print("new task", task)
     table.put_item(Item=task.to_dict())
