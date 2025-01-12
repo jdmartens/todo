@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TaskService } from '../task.service';
 import { MatTableModule } from '@angular/material/table';
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-task-list',
@@ -17,7 +18,10 @@ export class TaskListComponent implements OnInit {
   tasks: any[] = [];
   displayedColumns: string[] = ['task_name', 'due_date', 'status', 'actions'];
 
-  constructor(private taskService: TaskService) { }
+  constructor(
+    private taskService: TaskService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.loadTasks();
@@ -46,14 +50,7 @@ export class TaskListComponent implements OnInit {
   }
 
   editTask(id: string): void {
-    // this.taskService.deleteTask(id).subscribe(
-    //   () => {
-    //     this.loadTasks();
-    //   },
-    //   (error) => {
-    //     console.error('Error deleting task:', error);
-    //   }
-    // );
+    this.router.navigate(['/todo', id]);
   }
 
   deleteTask(id: string): void {
