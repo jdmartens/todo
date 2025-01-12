@@ -38,15 +38,8 @@ export class TaskListComponent implements OnInit {
     );
   }
 
-  openAddTaskForm(): void {
-    // this.taskService.deleteTask(id).subscribe(
-    //   () => {
-    //     this.loadTasks();
-    //   },
-    //   (error) => {
-    //     console.error('Error deleting task:', error);
-    //   }
-    // );
+  addTask(): void {
+    this.router.navigate(['/todo', 'new']);
   }
 
   editTask(id: string): void {
