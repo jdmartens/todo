@@ -19,6 +19,14 @@
         <mat-option value="completed">Completed</mat-option>
       </mat-select>
     </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Type</mat-label>
+      <mat-select formControlName="type" required>
+        <mat-option value="personal">Personal</mat-option>
+        <mat-option value="work">Work</mat-option>
+      </mat-select>
+    </mat-form-field>
   
     <button mat-raised-button color="primary" type="submit" [disabled]="!taskForm.valid">
       {{ isEditMode ? 'Update' : 'Add' }} Task
