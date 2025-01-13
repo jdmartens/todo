@@ -1,6 +1,7 @@
 import boto3
-from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Key, Attr
 from config.settings import aws_config
+from datetime import datetime
 
 dynamodb = boto3.resource(
     'dynamodb',
@@ -72,3 +73,9 @@ def update_task(task_id, task_data):
 
 def delete_task(task_id):
     table.delete_item(Key={'id': task_id})
+
+def get_overdue_tasks():
+    current_date = datetime.now(datetime.timezone.utc)
+    filter_expression = Attr('due_date').lt(current_date) & Attr('notified').eq(False)
+    response = table.scan(FilterExpression=filter_expression)
+    return response['Items']
