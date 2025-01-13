@@ -37,6 +37,7 @@ export class TaskFormComponent implements OnInit {
     this.taskForm = this.fb.group({
       task_name: ['', Validators.required],
       due_date: ['', Validators.required],
+      due_time: ['', Validators.required],
       status: ['pending', Validators.required],
       type: ['personal', Validators.required]
     });
@@ -55,7 +56,12 @@ export class TaskFormComponent implements OnInit {
   loadTask(id: string): void {
     this.taskService.getTask(id).subscribe(
       (task) => {
-        this.taskForm.patchValue(task);
+        const dueDate = new Date(task.due_date);
+        this.taskForm.patchValue({
+          ...task,
+          dueDate: dueDate,
+          due_time: this.formatTime(dueDate)
+        });
       },
       (error) => {
         console.error('Error loading task:', error);
@@ -65,9 +71,19 @@ export class TaskFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.taskForm.valid) {
-      const taskData = this.taskForm.value;
+      const formData = this.taskForm.value;
+      const dueDate = new Date(formData.due_date);
+      const [hours, minutes] = formData.due_time.split(':').map(Number);
+      dueDate.setHours(hours, minutes);
+
+      const taskData = {
+        ...formData,
+        id: this.taskId,
+        due_date: dueDate,
+      };
+      console.log('Due date:', dueDate, hours, minutes, taskData);
+
       if (this.isEditMode) {
-        const taskData = { ...this.taskForm.value, id: this.taskId };
         this.taskService.updateTask(this.taskId, taskData).subscribe({
           next: () => {
             this.router.navigate(['/todos']);
@@ -87,5 +103,9 @@ export class TaskFormComponent implements OnInit {
         });
       }
     }
+  }
+
+  private formatTime(date: Date): string {
+    return date.toTimeString().substring(0, 5);
   }
 }
