@@ -1,11 +1,17 @@
-from pydantic_settings import BaseSettings
+from pydantic import EmailStr
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-class AWSConfig(BaseSettings):
-    aws_access_key_id: str
-    aws_secret_access_key: str
-    region_name: str = "us-east-2"
+class Settings(BaseSettings):
+    SES_TO_EMAIL: EmailStr = "to.user@this.com"
+    SES_FROM_EMAIL: EmailStr = "from.user@this.com"
+    AWS_ACCESS_KEY_ID: str
+    AWS_SECRET_ACCESS_KEY: str
+    AWS_REGION: str = "us-east-1"
 
-    class Config:
-        env_file = ".env"
+    model_config = SettingsConfigDict(
+        env_file='.env',
+        env_file_encoding='utf-8',
+        case_sensitive=False
+    )
 
-aws_config = AWSConfig()
+settings = Settings()
