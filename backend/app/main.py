@@ -1,8 +1,11 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+from services.aws import SESService
 from routes import tasks
 from services import dynamodb
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import asyncio
 import logging
 
@@ -10,24 +13,25 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)  # Get a logger instance
 
-async def check_tasks_async():
-    while True:
-        logger.info("Checking condition (async)...")
-        # Your condition checking logic here
-        await asyncio.sleep(30 * 60)
+ses_service = SESService()
+scheduler = AsyncIOScheduler()
+@scheduler.scheduled_job('interval', seconds=10)
+def periodic_task():
+    print("Running periodic task")
+    tasks = dynamodb.get_overdue_tasks()
+    for task in tasks:
+        logger.info('task {}'.format(task))
+        logger.info(f"Task {task.task_name} is overdue!")
+        # Send email
+        ses_service.send_task_email(task)
 
+@asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup logic
-    logger.info("Starting up lifepsan...")
-    task = asyncio.create_task(check_tasks_async())
+    # Startup: schedule and start tasks
+    scheduler.start()
     yield
-    # Shutdown logic
-    logger.info("Shutting down lifespan...")
-    task.cancel() # Cancel the task to prevent lingering processes
-    try:
-        await task # wait for the task to finish cancelling.
-    except asyncio.CancelledError:
-        pass # Expected when task is cancelled
+    # Shutdown: stop the scheduler
+    scheduler.shutdown()
 
 app = FastAPI(lifespan=lifespan)
 
