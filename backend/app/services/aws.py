@@ -4,8 +4,13 @@ from config.settings import settings
 
 class SESService:
     def __init__(self):
-        self.client = boto3.client('ses', region_name=settings.AWS_REGION)
-        self.from_email = settings.SES_TO_EMAIL
+        self.client = boto3.client(
+            'ses', 
+            region_name=settings.AWS_REGION,
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+        )
+        self.from_email = settings.SES_FROM_EMAIL
         self.to_email = settings.SES_TO_EMAIL
 
     def send_task_email(self, task):
