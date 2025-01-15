@@ -1,13 +1,14 @@
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
-from config.settings import aws_config
-from datetime import datetime
+from schemas.task import TaskResponse
+from config.settings import settings
+from datetime import datetime, timezone
 
 dynamodb = boto3.resource(
     'dynamodb',
-    aws_access_key_id=aws_config.aws_access_key_id,
-    aws_secret_access_key=aws_config.aws_secret_access_key,
-    region_name=aws_config.region_name
+    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+    region_name=settings.AWS_REGION
 )
 table = dynamodb.Table('TodoTasks')
 
@@ -75,7 +76,8 @@ def delete_task(task_id):
     table.delete_item(Key={'id': task_id})
 
 def get_overdue_tasks():
-    current_date = datetime.now(datetime.timezone.utc)
+    current_date = datetime.now(timezone.utc).isoformat()
     filter_expression = Attr('due_date').lt(current_date) & Attr('notified').eq(False)
     response = table.scan(FilterExpression=filter_expression)
-    return response['Items']
+    tasks = [TaskResponse.from_dict(item) for item in response['Items']]
+    return tasks
