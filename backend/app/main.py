@@ -15,9 +15,8 @@ logger = logging.getLogger(__name__)  # Get a logger instance
 
 ses_service = SESService()
 scheduler = AsyncIOScheduler()
-@scheduler.scheduled_job('interval', seconds=10)
+@scheduler.scheduled_job('interval', seconds=30 * 60)
 def periodic_task():
-    print("Running periodic task")
     tasks = dynamodb.get_overdue_tasks()
     for task in tasks:
         logger.info('task {}'.format(task))
