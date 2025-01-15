@@ -1,6 +1,6 @@
 # Todo Application
 
-This is a Todo application built with FastAPI for the backend and Angular for the frontend. The backend uses AWS DynamoDB for data storage, AWS SES for sending email notifications and PyDantic for config.
+This is a Todo application built with FastAPI for the backend and Angular for the frontend. The backend uses AWS DynamoDB for data storage and AWS SES for sending email notifications. Pydantic is used for data validation, serialization, and environment variable management.
 
 ## Features
 
@@ -90,3 +90,11 @@ This is a Todo application built with FastAPI for the backend and Angular for th
 - Access the frontend at `http://localhost:4200`
 - Access the backend API documentation at `http://localhost:8000/docs`
 
+## Project Structure
+
+todo/ ├── backend/ │ ├── app/ │ │ ├── main.py │ │ ├── services/ │ │ │ ├── dynamodb.py │ │ │ ├── aws.py │ │ ├── schemas/ │ │ │ ├── task.py │ │ ├── routes/ │ │ │ ├── tasks.py │ ├── requirements.txt ├── frontend/ │ ├── src/ │ │ ├── app/ │ │ │ ├── app.component.ts │ │ │ ├── task-list/ │ │ │ │ ├── task-list.component.ts │ │ │ │ ├── task-list.component.html │ │ │ │ ├── task-list.component.scss │ │ │ ├── task-form/ │ │ │ │ ├── task-form.component.ts │ │ │ │ ├── task-form.component.html │ │ │ │ ├── task-form.component.scss │ ├── angular.json │ ├── package.json
+
+
+## License
+
+This project is licensed under the MIT License.
