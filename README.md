@@ -90,4 +90,3 @@ This is a Todo application built with FastAPI for the backend and Angular for th
 - Access the frontend at `http://localhost:4200`
 - Access the backend API documentation at `http://localhost:8000/docs`
 
-## Project Structure

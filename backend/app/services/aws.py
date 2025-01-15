@@ -37,5 +37,7 @@ class SESService:
             )
         except ClientError as e:
             print(f"An error occurred: {e.response['Error']['Message']}")
+            return False
         else:
             print(f"Email sent! Message ID: {response['MessageId']}")
+            return True

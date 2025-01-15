@@ -23,7 +23,9 @@ def periodic_task():
         logger.info('task {}'.format(task))
         logger.info(f"Task {task.task_name} is overdue!")
         # Send email
-        ses_service.send_task_email(task)
+        if ses_service.send_task_email(task):
+            # Update the notified field
+            dynamodb.update_task(task.id, {"notified": True})
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
