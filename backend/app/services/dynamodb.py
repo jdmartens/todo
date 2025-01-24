@@ -59,17 +59,12 @@ def add_task(task):
     table.put_item(Item=task.to_dict())
 
 def update_task(task_id, task_data):
+    update_expression = "set " + ", ".join(f"{k}=:{k}" for k in task_data.keys())
+    expression_attribute_values = {f":{k}": v for k, v in task_data.items()}
     response = table.update_item(
         Key={'id': task_id},
-        UpdateExpression="set task_name=:n, due_date=:d, #type=:t",
-        ExpressionAttributeValues={
-            ':n': task_data.task_name,
-            ':d': task_data.due_date.isoformat(),
-            ':t': task_data.type
-        },
-        ExpressionAttributeNames={
-            '#type': 'type'
-        },
+        UpdateExpression=update_expression,
+        ExpressionAttributeValues=expression_attribute_values,
         ReturnValues="ALL_NEW"
     )
     return response['Attributes']
