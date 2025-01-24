@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Query
-from schemas.task import TaskCreate, TaskUpdate, TaskResponse
+from schemas.task import TaskComplete, TaskCreate, TaskUpdate, TaskResponse
 from models.task import Task
 from services import dynamodb
 from typing import List
@@ -22,6 +22,14 @@ async def edit_task(task_id: str, task: TaskUpdate):
     try:
         updated_task = dynamodb.update_task(task_id, task)
         return TaskResponse(**updated_task)
+    except Exception as e:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+@router.put("/tasks/{task_id}/complete", response_model=TaskResponse)
+async def complete_task(task_id: str, task: TaskComplete):
+    try:
+        updated_task = dynamodb.complete_task(task_id)
+        return TaskResponse.from_dict(updated_task)
     except Exception as e:
         raise HTTPException(status_code=404, detail="Task not found")
 
