@@ -53,7 +53,6 @@ def get_task(id: str):
     return response['Item']
 
 def add_task(task):
-    print("new task", task)
     table.put_item(Item=task.to_dict())
 
 def update_task(task_id, task_data):
@@ -67,6 +66,20 @@ def update_task(task_id, task_data):
         },
         ExpressionAttributeNames={
             '#type': 'type'
+        },
+        ReturnValues="ALL_NEW"
+    )
+    return response['Attributes']
+
+def complete_task(task_id):
+    response = table.update_item(
+        Key={'id': task_id},
+        UpdateExpression="set #status=:s",
+        ExpressionAttributeValues={
+            ':s': 'completed'
+        },
+        ExpressionAttributeNames={
+            '#status': 'status'
         },
         ReturnValues="ALL_NEW"
     )
