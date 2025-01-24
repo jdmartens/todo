@@ -43,9 +43,12 @@ def create_table(table_name):
     return table
 
 
-def get_all_tasks(status: str = "pending"):
-    filter_expression = Key('status').eq(status)
-    response = table.scan(FilterExpression=filter_expression)
+def get_all_tasks(status: str = None):
+    if status:
+        filter_expression = Key('status').eq(status)
+        response = table.scan(FilterExpression=filter_expression)
+    else:
+        response = table.scan()
     return response['Items']
 
 def get_task(id: str):

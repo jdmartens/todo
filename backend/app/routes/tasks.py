@@ -2,13 +2,16 @@ from fastapi import APIRouter, HTTPException, Query
 from schemas.task import TaskComplete, TaskCreate, TaskUpdate, TaskResponse
 from models.task import Task
 from services import dynamodb
-from typing import List
+from typing import List, Optional
 
 router = APIRouter()
 
 @router.get("/tasks", response_model=List[TaskResponse])
-async def get_all_tasks(status: str = Query(default="pending")):
-    tasks = dynamodb.get_all_tasks(status)
+async def get_all_tasks(status: Optional[str] = None):
+    if status:
+        tasks = dynamodb.get_all_tasks(status)
+    else:
+        tasks = dynamodb.get_all_tasks()
     return [TaskResponse(**task) for task in tasks]
 
 @router.post("/tasks/", response_model=TaskResponse)
