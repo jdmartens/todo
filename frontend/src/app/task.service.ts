@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -24,6 +25,10 @@ export class TaskService {
 
   updateTask(id: string, task: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/tasks/${id}`, task);
+  }
+
+  completeTask(id: string, task: { status: string }): Observable<any> {
+    return this.http.put(`${this.apiUrl}/tasks/${id}/complete`, task);
   }
 
   deleteTask(id: string): Observable<any> {
