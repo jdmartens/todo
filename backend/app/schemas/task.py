@@ -15,6 +15,9 @@ class TaskUpdate(BaseModel):
     status: str
     type: str
 
+class TaskComplete(BaseModel):
+    status: str = "completed"
+
 class TaskResponse(BaseModel):
     id: str
     task_name: str
@@ -30,5 +33,6 @@ class TaskResponse(BaseModel):
             task_name=data['task_name'],
             due_date=datetime.fromisoformat(data['due_date']),
             notified=data['notified'],
-            type=data['type']
+            type=data['type'],
+            status=data.get('status')
         )
