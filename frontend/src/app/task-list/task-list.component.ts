@@ -46,6 +46,21 @@ export class TaskListComponent implements OnInit {
     this.router.navigate(['/todo', id]);
   }
 
+  completeTask(id: string): void {
+    const taskData = {
+      id: id,
+      status: 'completed'
+    };
+    this.taskService.updateTask(id, taskData).subscribe({
+      next: () => {
+        this.router.navigate(['/todos']);
+      },
+      error: (error) => {
+        console.error('Error updating task:', error);
+      }
+    });
+  }
+
   deleteTask(id: string): void {
     this.taskService.deleteTask(id).subscribe(
       () => {
